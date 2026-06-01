@@ -41,6 +41,26 @@ query {
 }
 """
 
+QUERY_SCHEDULED = """
+query GetScheduledPosts($channelId: String!) {
+  posts(
+    first: 60,
+    input: {
+      filter: {
+        status: [scheduled],
+        channelIds: [$channelId]
+      }
+    }
+  ) {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+"""
+
 
 def _run_query(query: str, variables: dict = None) -> dict:
     payload = {"query": query}
@@ -118,14 +138,42 @@ def schedule_post(post: dict) -> bool:
         return False
 
 
+def get_scheduled_count() -> int:
+    """Return the number of currently scheduled posts in the Buffer channel."""
+    try:
+        data = _run_query(QUERY_SCHEDULED, {"channelId": BUFFER_CHANNEL_ID})
+        edges = data.get("data", {}).get("posts", {}).get("edges", [])
+        count = len(edges)
+        logger.info(f"Buffer currently has {count} scheduled posts for channel {BUFFER_CHANNEL_ID}")
+        return count
+    except Exception as e:
+        logger.error(f"Failed to query scheduled posts: {e}")
+        return 0
+
+
 def schedule_batch(posts: list[dict]) -> tuple[int, int]:
     """Schedule all posts to Buffer. Returns (success_count, fail_count)."""
     success, fail = 0, 0
-    for post in posts:
+    current = get_scheduled_count()
+    max_allowed = 10
+
+    if current >= max_allowed:
+        logger.warning("Buffer already has the maximum number of scheduled posts; no new posts will be scheduled.")
+        return 0, len(posts)
+
+    available = max_allowed - current
+    if len(posts) > available:
+        logger.warning(
+            f"Only {available} of {len(posts)} posts can be scheduled now because Buffer allows {max_allowed} scheduled posts."
+        )
+
+    for post in posts[:available]:
         if schedule_post(post):
             success += 1
         else:
             fail += 1
+
+    fail += max(0, len(posts) - available)
     logger.info(f"Batch complete — {success} scheduled, {fail} failed")
     return success, fail
 
