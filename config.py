@@ -21,7 +21,7 @@ GROQ_MODEL   = "llama-3.3-70b-versatile"
 # --- Posting Schedule ---
 POST_START_HOUR   = 8       # 8:00 AM
 POST_END_HOUR     = 17      # 5:00 PM
-POSTS_PER_DAY     = 90      # ⚠️ Keep below 100 to meet Buffer free plan limits
+POSTS_PER_DAY     = 10      # Match Buffer free plan limit
 TIMEZONE          = "Africa/Lagos"
 
 # --- Content Settings ---
