@@ -2,15 +2,20 @@
 #  X Music & Entertainment Bot — Configuration (OSS Edition)
 # ============================================================
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # --- Buffer API (only non-OSS component) ---
 # Get your API key from: https://publish.buffer.com/settings/api
-BUFFER_API_KEY    = "drRoxqoMOmf-qnMSfMRS-SSi00lP5eRyniGGskW2ZDA"
-BUFFER_CHANNEL_ID = "6a143acec687a22dd42438a7"
+BUFFER_API_KEY    = os.getenv("BUFFER_API_KEY", "")
+BUFFER_CHANNEL_ID = os.getenv("BUFFER_CHANNEL_ID", "")
 BUFFER_API_URL    = "https://api.buffer.com/1/graphql"
 
 # --- Groq LLM API ---
 # Get your API key from: https://console.groq.com/keys
-GROQ_API_KEY = "os.getenv("GROQ_API_KEY")"
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL   = "llama-3.3-70b-versatile"
 
 # --- Posting Schedule ---

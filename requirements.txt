@@ -2,5 +2,6 @@
 # HTTP client
 requests==2.31.0          # HTTP client — Apache 2.0
 feedparser==6.0.10        # RSS feed parser — BSD
+python-dotenv==1.0.0      # Load environment variables from .env — BSD
 # (No local LLM required; generator uses Python templates)
 # Buffer is the only non-OSS service used

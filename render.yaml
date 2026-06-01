@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: music-bot
+    runtime: python
+    pythonVersion: 3.11
+    buildCommand: pip install -r requirements.txt
+    startCommand: python daily_prep.py
+    envVars:
+      - key: BUFFER_API_KEY
+        scope: build
+        sync: false
+      - key: BUFFER_CHANNEL_ID
+        scope: build
+        sync: false
+      - key: GROQ_API_KEY
+        scope: build
+        sync: false

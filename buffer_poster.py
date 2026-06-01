@@ -60,10 +60,13 @@ def list_channels() -> list[dict]:
         for org in organizations:
             for c in org.get("channels", []):
                 channels.append(c)
-                logger.info(f"Channel: {c.get('service')} | {c.get('name')} | id={c.get('id')}")
+                line = f"Channel: {c.get('service')} | {c.get('name')} | id={c.get('id')}"
+                logger.info(line)
+                print(line)
         return channels
     except Exception as e:
         logger.error(f"Failed to list channels: {e}")
+        print(f"Failed to list channels: {e}")
         return []
 
 
@@ -125,3 +128,7 @@ def schedule_batch(posts: list[dict]) -> tuple[int, int]:
             fail += 1
     logger.info(f"Batch complete — {success} scheduled, {fail} failed")
     return success, fail
+
+
+if __name__ == "__main__":
+    list_channels()
